@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Desafio Técnico - Node.js (Express ou Nest) + Vue.js ou React (opcional)
 
 ## 💸 Desafio: Conversor de Moedas
@@ -133,3 +134,9 @@ Você deverá implementar uma aplicação que permita a conversão de valores en
 * Se desejar, adicione um arquivo `THOUGHTS.md` com explicações técnicas, suposições e decisões de arquitetura.
 
 Boa sorte! 🚀
+=======
+# currency-converter
+
+Currency Converter
+Teste de commit
+>>>>>>> 4dad0e9 (First commit test.)
