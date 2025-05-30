@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // Routes
-app.use('/api', router);
+app.use('/', router);
 
 // Health check
 app.get('/health', (req, res) => {
