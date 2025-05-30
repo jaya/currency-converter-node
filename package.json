@@ -1,28 +1,28 @@
 {
   "name": "currency-converter",
   "version": "1.0.0",
-  "description": "Currency Converter Teste de commit",
-  "main": "index.js",
+  "description": "Currency Converter",
+  "main": "server.ts",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "nodemon src/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node dist/src/server.js",
+    "dev": "npx tsx src/server.ts",
+    "ts-node": "ts-node src/server.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Agner Souza Bezerra",
+  "license": "none",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "tsx": "^4.19.4"
   },
   "devDependencies": {
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
     "@types/morgan": "^1.9.9",
-    "@types/node": "^22.15.28",
+    "@types/node": "^22.15.29",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
