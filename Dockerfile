@@ -1,4 +1,4 @@
-FROM node:22-slim AS base-linux
+FROM node:22-slim
 WORKDIR /app
 COPY ./ ./
 RUN npm i
