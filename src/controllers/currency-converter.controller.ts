@@ -16,7 +16,9 @@ export const getCurrencyConversion = (req: Request, res: Response) => {
     const validatedParams = validator.validateCurrencyParams(queryParams);
 
     const currencyConverterService = new CurrencyConverterService();
-    // currencyConverterService.convertCurrencyAndGetTaxes(fromCurrency, fromValue,toCurrency)
+    const conversionResult = currencyConverterService.convertCurrencyAndGetTaxes(validatedParams)
+
+    //TODO: Save into database
     res.json({ message: 'Current Conversion successful' });
   } catch (error: any) {
     console.error("ERROR_VALIDATE_DTO " + error.message);
