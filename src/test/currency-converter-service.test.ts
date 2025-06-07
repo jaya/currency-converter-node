@@ -8,11 +8,17 @@ import { AxiosResponse } from 'axios';
 jest.mock('../services/call-api.service', () => {
   return {
     CallApiService: jest.fn().mockImplementation(() => ({
-      callApiWithGetAndParams: jest.fn()
-    }))
+      callApiWithGetAndParams: jest.fn().mockImplementation(() => {
+        return {
+          data: {
+            meta: { last_updated_at: '2025-06-05T00:00:00Z' },
+            data: { USD: { code: 'USD', value: 0.2 } },
+          },
+        };
+      }),
+    })),
   };
 });
-
 
 describe('CurrencyConverterService', () => {
   let service: CurrencyConverterService;
@@ -21,19 +27,19 @@ describe('CurrencyConverterService', () => {
   const mockValidatedParams: ValidatedConvertCurrency = {
     fromCurrency: CurrencyType.BRL,
     toCurrency: CurrencyType.USD,
-    fromValue: 100
+    fromValue: 100,
   };
 
   const mockApiResponse: AxiosResponse = {
     data: {
       data: {
         USD: {
-          value: 0.2
-        }
+          value: 0.2,
+        },
       },
       meta: {
-        last_updated_at: '2025-06-05T00:00:00Z'
-      }
+        last_updated_at: '2025-06-05T00:00:00Z',
+      },
     },
     status: 200,
     statusText: 'OK',
@@ -41,8 +47,8 @@ describe('CurrencyConverterService', () => {
     config: {
       headers: null as any,
       url: '',
-      method: 'get'
-    }
+      method: 'get',
+    },
   };
 
   beforeEach(() => {
@@ -51,15 +57,14 @@ describe('CurrencyConverterService', () => {
     process.env.API_KEY = 'test-api-key';
     process.env.API_URL = 'https://api.example.com';
 
-    service = new CurrencyConverterService();
+    mockCallApiService = new (CallApiService as jest.MockedClass<
+      typeof CallApiService
+    >)() as jest.Mocked<CallApiService>;
 
-    mockCallApiService = new (CallApiService as jest.MockedClass<typeof CallApiService>)() as jest.Mocked<CallApiService>;
-
-    mockCallApiService.callApiWithGetAndParams.mockResolvedValueOnce(mockApiResponse)
-  });
-
-  it('service object should be defined', () => {
-    expect(service).toBeDefined();
+    mockCallApiService.callApiWithGetAndParams.mockResolvedValue(
+      mockApiResponse
+    );
+    service = new CurrencyConverterService(mockCallApiService);
   });
 
   it('should call API with correct parameters', async () => {
@@ -70,13 +75,14 @@ describe('CurrencyConverterService', () => {
       {
         apikey: process.env.API_KEY,
         base_currency: CurrencyType.BRL,
-        currencies: CurrencyType.USD
+        currencies: CurrencyType.USD,
       }
     );
   });
-
   it('should return correct conversion result', async () => {
-    const result = await service.convertCurrencyAndGetTaxes(mockValidatedParams);
+    const result = await service.convertCurrencyAndGetTaxes(
+      mockValidatedParams
+    );
 
     const expectedResult: ConversionResultInterface = {
       fromCurrency: CurrencyType.BRL,
@@ -84,10 +90,9 @@ describe('CurrencyConverterService', () => {
       fromValue: 100,
       toValue: 20,
       rate: 0.2,
-      timestamp: '2025-06-05T00:00:00Z'
+      timestamp: '2025-06-05T00:00:00Z',
     };
 
     expect(result).toEqual(expectedResult);
   });
-
 });
