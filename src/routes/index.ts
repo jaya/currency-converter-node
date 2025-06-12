@@ -3,6 +3,6 @@ import { getCurrencyConversion } from '../controllers/currency-converter.control
 
 const router = Router();
 
-router.get('/currency-converter', getCurrencyConversion);
+router.get('/transactions', getCurrencyConversion);
 
 export default router;
