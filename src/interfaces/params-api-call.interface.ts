@@ -3,8 +3,3 @@ export interface ParamsApiCallInteface {
   base_currency: string;
   currencies: string;
 }
-interface ConvertCurrencyDTO {
-  fromCurrency: string;
-  fromValue: number;
-  toCurrency: string;
-}
