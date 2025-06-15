@@ -21,6 +21,11 @@ export class ValidateQueryParams {
     if (!query.toCurrency) {
       throw new Error('Missing toCurrency query parameter');
     }
+
+    if (!query.userId) {
+      throw new Error('Missing userId query parameter');
+    }
+
     const fromValueNumber = parseFloat(String(query.fromValue));
     if (isNaN(fromValueNumber)) {
       throw new Error('The query parameter toCurrency must be a number');
