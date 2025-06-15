@@ -34,6 +34,17 @@ describe('it should test the ValidateQueryParams Class', () => {
       );
     });
 
+    it('should throw error when userId is missing', () => {
+      const invalidQuery = {
+        fromCurrency: CurrencyType.BRL,
+        toCurrency: CurrencyType.USD,
+        fromValue: '100'
+      } as unknown as ConvertCurrencyDTO;
+      expect(() => validator.validateCurrencyParams(invalidQuery)).toThrow(
+        'Missing userId query parameter'
+      );
+    });
+
     it('should throw error when toCurrency is missing', () => {
       const invalidQuery = {
         fromCurrency: CurrencyType.BRL,
@@ -76,7 +87,8 @@ describe('it should test the ValidateQueryParams Class', () => {
       const invalidQuery = {
         fromCurrency: CurrencyType.BRL,
         toCurrency: CurrencyType.USD,
-        fromValue: 'test-mock'
+        fromValue: 'test-mock',
+        userId: '123'
       };
 
       expect(() => validator.validateCurrencyParams(invalidQuery)).toThrow();
@@ -86,7 +98,8 @@ describe('it should test the ValidateQueryParams Class', () => {
       const validQuery = {
         fromCurrency: CurrencyType.BRL,
         toCurrency: CurrencyType.USD,
-        fromValue: '100'
+        fromValue: '100',
+        userId: '123'
       };
 
       const result = validator.validateCurrencyParams(validQuery);
@@ -110,7 +123,8 @@ describe('it should test the ValidateQueryParams Class', () => {
         const validQuery = {
           fromCurrency: currency,
           toCurrency: CurrencyType.USD,
-          fromValue: '100'
+          fromValue: '100',
+          userId: '123'
         };
 
         expect(() => validator.validateCurrencyParams(validQuery)).not.toThrow();
