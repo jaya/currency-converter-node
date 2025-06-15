@@ -1,4 +1,4 @@
-import { DataSource, InsertResult } from "typeorm";
+import { DataSource } from "typeorm";
 import { CurrencyConverterTransactionRepository } from "../repositories/currency-converter-transaction.repository";
 import { CurrencyConverterTransactionEntity } from "../entities/currency-converter-transaction.entity";
 import { SaveTransactionInterface } from "../interfaces/save-transaction.interface";
