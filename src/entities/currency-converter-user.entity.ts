@@ -8,5 +8,5 @@ export class CurrencyConverterUserEntity {
   @Column({ type: 'varchar', length: 50 })
   name: string | undefined;
   @OneToMany(() => CurrencyConverterTransactionEntity, (transaction) => transaction.user)
-  transactions!: CurrencyConverterTransactionEntity[] | undefined
+  transactions?: CurrencyConverterTransactionEntity[] | undefined
 }
