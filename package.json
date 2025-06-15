@@ -10,7 +10,7 @@
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watchAll"
   },
   "author": "Agner Souza Bezerra",
   "license": "none",
