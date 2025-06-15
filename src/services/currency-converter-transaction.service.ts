@@ -23,6 +23,7 @@ export class CurrencyConverterTransactionService {
         rate: dataToSaveTransaction?.rate ?? 0,
         timestamp: savingTransactionResult?.generatedMaps[0]?.transactionTimestamp ?? ''
       }
+
       return objectToReturn;
     } catch (error: any) {
       throw Error(error?.message)
