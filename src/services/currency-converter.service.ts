@@ -3,9 +3,10 @@ import { ConversionResultInterface } from "../interfaces/conversion-result.inter
 import { ValidatedConvertCurrency } from "../interfaces/convert-currency-dto.interface";
 import { ParamsApiCallInteface } from "../interfaces/params-api-call.interface";
 import { CallApiService } from "./call-api.service";
+import logger from "../config/logs/logger";
 
 export class CurrencyConverterService {
-  constructor(private callApiService: CallApiService) {}
+  constructor(private callApiService: CallApiService) { }
   async convertCurrencyAndGetTaxes(validatedParams: ValidatedConvertCurrency): Promise<ConversionResultInterface> {
     const { fromCurrency, toCurrency, fromValue } = validatedParams;
     const params: ParamsApiCallInteface = {
@@ -32,8 +33,10 @@ export class CurrencyConverterService {
         rate,
         timestamp,
       };
+      logger.info(`RESULT_CONVERTION: ${JSON.stringify(conversionResult)}`)
       return conversionResult;
     } catch (error: any) {
+      logger.error(`ERROR_RESULT_CONVERTION: ${error?.message}`)
       throw Error(error?.message);
     }
   }

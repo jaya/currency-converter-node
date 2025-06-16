@@ -8,6 +8,7 @@ import { CurrencyConverterTransactionService } from "../services/currency-conver
 import { CurrencyConverterTransactionEntity } from "../entities/currency-converter-transaction.entity";
 import { AppDataSource } from "../config/ormconfig";
 import { CurrencyConverterUserService } from "../services/currency-converter-user.service";
+import logger from "../config/logs/logger";
 
 export const getCurrencyConversion = async (req: Request, res: Response) => {
   try {
@@ -37,10 +38,11 @@ export const getCurrencyConversion = async (req: Request, res: Response) => {
       rate: conversionResult?.rate,
       transactionTimestamp: conversionResult?.timestamp,
     };
-    const result = await currencyConverterTransactionService.createCurrencyConverterTransaction(dataToSaveTransaction);
-    res.json(result);
+    const currencyConverterResult = await currencyConverterTransactionService.createCurrencyConverterTransaction(dataToSaveTransaction);
+    logger.info(`RESULT_TRANSACTION: ${JSON.stringify(currencyConverterResult)}`)
+    res.json(currencyConverterResult);
   } catch (error: any) {
-    console.error("ERROR_VALIDATE_DTO_" + error.message);
+    logger.error("ERROR_RESULT_TRANSACTION:" + error.message);
     res.status(400).json({ Error: error.message });
   }
 };

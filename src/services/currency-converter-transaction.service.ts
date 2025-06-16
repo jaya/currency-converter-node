@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import { CurrencyConverterTransactionRepository } from "../repositories/currency-converter-transaction.repository";
 import { CurrencyConverterTransactionEntity } from "../entities/currency-converter-transaction.entity";
 import { SaveTransactionInterface } from "../interfaces/save-transaction.interface";
+import logger from "../config/logs/logger";
 
 export class CurrencyConverterTransactionService {
   private currencyConverterTranscationRepository: CurrencyConverterTransactionRepository;
@@ -23,9 +24,10 @@ export class CurrencyConverterTransactionService {
         rate: dataToSaveTransaction?.rate ?? 0,
         timestamp: savingTransactionResult?.generatedMaps[0]?.transactionTimestamp ?? "",
       };
-
+      logger.info(`RESULT_INSERT: ${JSON.stringify(objectToReturn)}`)
       return objectToReturn;
     } catch (error: any) {
+      logger.error(`ERROR_RESULT_INSERT: ${error?.message}`)
       throw Error(error?.message);
     }
   }
