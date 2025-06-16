@@ -2,13 +2,12 @@ import axios, { AxiosResponse } from "axios";
 import { ParamsApiCallInteface } from "../interfaces/params-api-call.interface";
 
 export class CallApiService {
-  constructor() { }
+  constructor() {}
   async callApiWithGetAndParams(url: string, params: ParamsApiCallInteface): Promise<AxiosResponse<any, any>> {
     try {
-
-      return await axios.get(url, { params })
+      return await axios.get(url, { params });
     } catch (error: any) {
-      throw Error(error?.message)
+      throw Error(error?.message);
     }
   }
 }

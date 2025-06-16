@@ -1,6 +1,6 @@
-import { DataSource } from 'typeorm';
-import { CurrencyConverterUserEntity } from '../entities/currency-converter-user.entity';
-import { CurrencyConverterTransactionEntity } from '../entities/currency-converter-transaction.entity';
+import { DataSource } from "typeorm";
+import { CurrencyConverterUserEntity } from "../entities/currency-converter-user.entity";
+import { CurrencyConverterTransactionEntity } from "../entities/currency-converter-transaction.entity";
 const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, APP_ENV } = process.env;
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -12,4 +12,3 @@ export const AppDataSource = new DataSource({
   logging: APP_ENV === "dev" ? true : false,
   entities: [CurrencyConverterUserEntity, CurrencyConverterTransactionEntity],
 });
-

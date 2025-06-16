@@ -1,18 +1,18 @@
-import { CurrencyConverterService } from '../../services/currency-converter.service';
-import { CallApiService } from '../../services/call-api.service';
-import { ValidatedConvertCurrency } from '../../interfaces/convert-currency-dto.interface';
-import { ConversionResultInterface } from '../../interfaces/conversion-result.interface';
-import { CurrencyType } from '../../interfaces/currency-type.interface';
-import { AxiosResponse } from 'axios';
+import { CurrencyConverterService } from "../../services/currency-converter.service";
+import { CallApiService } from "../../services/call-api.service";
+import { ValidatedConvertCurrency } from "../../interfaces/convert-currency-dto.interface";
+import { ConversionResultInterface } from "../../interfaces/conversion-result.interface";
+import { CurrencyType } from "../../interfaces/currency-type.interface";
+import { AxiosResponse } from "axios";
 
-jest.mock('../../services/call-api.service', () => {
+jest.mock("../../services/call-api.service", () => {
   return {
     CallApiService: jest.fn().mockImplementation(() => ({
       callApiWithGetAndParams: jest.fn().mockImplementation(() => {
         return {
           data: {
-            meta: { last_updated_at: '2025-06-05T00:00:00Z' },
-            data: { USD: { code: 'USD', value: 0.2 } },
+            meta: { last_updated_at: "2025-06-05T00:00:00Z" },
+            data: { USD: { code: "USD", value: 0.2 } },
           },
         };
       }),
@@ -20,7 +20,7 @@ jest.mock('../../services/call-api.service', () => {
   };
 });
 
-describe('CurrencyConverterService', () => {
+describe("CurrencyConverterService", () => {
   let service: CurrencyConverterService;
   let mockCallApiService: jest.Mocked<CallApiService>;
 
@@ -38,51 +38,42 @@ describe('CurrencyConverterService', () => {
         },
       },
       meta: {
-        last_updated_at: '2025-06-05T00:00:00Z',
+        last_updated_at: "2025-06-05T00:00:00Z",
       },
     },
     status: 200,
-    statusText: 'OK',
+    statusText: "OK",
     headers: {},
     config: {
       headers: null as any,
-      url: '',
-      method: 'get',
+      url: "",
+      method: "get",
     },
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
 
-    process.env.API_KEY = 'test-api-key';
-    process.env.API_URL = 'https://api.example.com';
+    process.env.API_KEY = "test-api-key";
+    process.env.API_URL = "https://api.example.com";
 
-    mockCallApiService = new (CallApiService as jest.MockedClass<
-      typeof CallApiService
-    >)() as jest.Mocked<CallApiService>;
+    mockCallApiService = new (CallApiService as jest.MockedClass<typeof CallApiService>)() as jest.Mocked<CallApiService>;
 
-    mockCallApiService.callApiWithGetAndParams.mockResolvedValue(
-      mockApiResponse
-    );
+    mockCallApiService.callApiWithGetAndParams.mockResolvedValue(mockApiResponse);
     service = new CurrencyConverterService(mockCallApiService);
   });
 
-  it('should call API with correct parameters', async () => {
+  it("should call API with correct parameters", async () => {
     await service.convertCurrencyAndGetTaxes(mockValidatedParams);
 
-    expect(mockCallApiService.callApiWithGetAndParams).toHaveBeenCalledWith(
-      process.env.API_URL,
-      {
-        apikey: process.env.API_KEY,
-        base_currency: CurrencyType.BRL,
-        currencies: CurrencyType.USD,
-      }
-    );
+    expect(mockCallApiService.callApiWithGetAndParams).toHaveBeenCalledWith(process.env.API_URL, {
+      apikey: process.env.API_KEY,
+      base_currency: CurrencyType.BRL,
+      currencies: CurrencyType.USD,
+    });
   });
-  it('should return correct conversion result', async () => {
-    const result = await service.convertCurrencyAndGetTaxes(
-      mockValidatedParams
-    );
+  it("should return correct conversion result", async () => {
+    const result = await service.convertCurrencyAndGetTaxes(mockValidatedParams);
 
     const expectedResult: ConversionResultInterface = {
       fromCurrency: CurrencyType.BRL,
@@ -90,7 +81,7 @@ describe('CurrencyConverterService', () => {
       fromValue: 100,
       toValue: 20,
       rate: 0.2,
-      timestamp: '2025-06-05T00:00:00Z',
+      timestamp: "2025-06-05T00:00:00Z",
     };
 
     expect(result).toEqual(expectedResult);

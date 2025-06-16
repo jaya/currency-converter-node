@@ -1,25 +1,22 @@
-import { AxiosResponse } from 'axios';
-import { ConversionResultInterface } from '../interfaces/conversion-result.interface';
-import { ValidatedConvertCurrency } from '../interfaces/convert-currency-dto.interface';
-import { ParamsApiCallInteface } from '../interfaces/params-api-call.interface';
-import { CallApiService } from './call-api.service';
+import { AxiosResponse } from "axios";
+import { ConversionResultInterface } from "../interfaces/conversion-result.interface";
+import { ValidatedConvertCurrency } from "../interfaces/convert-currency-dto.interface";
+import { ParamsApiCallInteface } from "../interfaces/params-api-call.interface";
+import { CallApiService } from "./call-api.service";
 
 export class CurrencyConverterService {
-  constructor(private callApiService: CallApiService) { }
+  constructor(private callApiService: CallApiService) {}
   async convertCurrencyAndGetTaxes(validatedParams: ValidatedConvertCurrency): Promise<ConversionResultInterface> {
     const { fromCurrency, toCurrency, fromValue } = validatedParams;
     const params: ParamsApiCallInteface = {
-      apikey: process.env.API_KEY ?? '',
-      base_currency: fromCurrency ?? '',
-      currencies: toCurrency ?? '',
+      apikey: process.env.API_KEY ?? "",
+      base_currency: fromCurrency ?? "",
+      currencies: toCurrency ?? "",
     };
 
-    const apiUrl = process.env.API_URL ?? '';
+    const apiUrl = process.env.API_URL ?? "";
     try {
-      const apiResult = await this.callApiService.callApiWithGetAndParams(
-        apiUrl,
-        params
-      );
+      const apiResult = await this.callApiService.callApiWithGetAndParams(apiUrl, params);
 
       const currencyKey = Object.keys(apiResult.data.data)[0];
       const rate = apiResult.data.data[currencyKey].value;
@@ -28,8 +25,8 @@ export class CurrencyConverterService {
       const toValue = fromValue * rate;
 
       const conversionResult: ConversionResultInterface = {
-        fromCurrency: fromCurrency ?? '',
-        toCurrency: toCurrency ?? '',
+        fromCurrency: fromCurrency ?? "",
+        toCurrency: toCurrency ?? "",
         fromValue: fromValue,
         toValue: parseFloat(toValue.toFixed(4)),
         rate,
@@ -37,7 +34,7 @@ export class CurrencyConverterService {
       };
       return conversionResult;
     } catch (error: any) {
-      throw Error(error?.message)
+      throw Error(error?.message);
     }
   }
 }
