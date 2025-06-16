@@ -1,142 +1,72 @@
-<<<<<<< HEAD
-# Desafio Técnico - Node.js (Express ou Nest) + Vue.js ou React (opcional)
+# Currency-Converter project
 
-## 💸 Desafio: Conversor de Moedas
+# How to run this project
 
-Você deverá implementar uma aplicação que permita a conversão de valores entre moedas, utilizando **Node.js com TypeScript** no backend. O frontend pode ser implementado opcionalmente em **Vue.js** ou **React**.
+To run this project you need to install the docker and docker compose software into your machine.
 
-> **Importante:** Caso o candidato não tenha experiência com frontend, a entrega pode ser feita exclusivamente com a API (backend).
+With this software installed, clone this project into your machine.
+Create the .env file in root folder project and copy all the variables in the .env.example file.
+Fill the variables in the .env
+After these steps run the follwing code:
 
----
+`docker compose up -d --build`
 
-## 📆 Requisitos do Projeto
+# How to run the unit and integration test
 
-### Funcionalidades principais
+When the containers is running, execute the following code:
 
-1. A API deve permitir a conversão entre pelo menos **4 moedas**:
+`docker exec -it currency-converter /bin/bash`
 
-   * BRL (Real)
-   * USD (Dólar Americano)
-   * EUR (Euro)
-   * JPY (Iene)
+You'll get in the currency-converter container. There you should run this code:
 
-2. As **taxas de câmbio** devem ser obtidas da API:
+`npm run test`
 
-   * [https://app.currencyapi.com/](https://app.currencyapi.com/)
-   * Documentação oficial: [https://currencyapi.com/docs](https://currencyapi.com/docs)
+# Explanation of purpose
 
-3. A aplicação deve **persistir** cada transação realizada, contendo:
+This project is a currency conversion service that calculates exchange rates and applicable taxes.
 
-   * ID do usuário
-   * Moeda de origem e destino
-   * Valor de origem
-   * Valor convertido (destino)
-   * Taxa de conversão
-   * Data/Hora UTC
+The service currently supports conversions between these currencies:
 
-4. As transações devem estar disponíveis via endpoint:
+- 🇧🇷 BRL (Brazilian Real)
+- 🇺🇸 USD (US Dollar)
+- 🇪🇺 EUR (Euro)
+- 🇯🇵 JPY (Japanese Yen)
 
-   * `GET /transactions?userId=123`
+## Quick Start Example
 
-5. Uma transação de sucesso deve retornar:
+Convert $100 USD to Brazilian Reais:
 
-   ```json
-   {
-     "transactionId": 42,
-     "userId": 123,
-     "fromCurrency": "USD",
-     "toCurrency": "BRL",
-     "fromValue": 100,
-     "toValue": 525.32,
-     "rate": 5.2532,
-     "timestamp": "2024-05-19T18:00:00Z"
-   }
-   ```
+```bash
+GET http://localhost:4000/transactions?userId=1&fromCurrency=USD&fromValue=100&toCurrency=BRL
+```
 
-6. Casos de falha devem retornar **status HTTP adequado** e mensagem de erro clara.
+# Key architectural decisions
 
-7. O projeto deve conter **testes unitários e de integração**.
+The system follows a layered architecture pattern consisting of:
 
-8. O repositório deve incluir um **README.md** com:
+- **Controllers**: Handle HTTP requests and responses
+- **Services**: Contain business logic and application rules
+- **Repositories**: Manage data persistence and database operations
 
-   * Instruções para rodar o projeto
-   * Explicação do propósito
-   * Principais decisões de arquitetura
-   * Como os dados estão organizados (separação de camadas)
+This separation of concerns provides:
 
-9. O código deve estar todo em **inglês**.
+- Improved code readability
+- Better maintainability
+- Easier testing through clear boundaries
+- Simplified debugging flow
 
-10. O projeto deve ser entregue via repositório no GitHub.
+This project implemented **SOLID principles** throughout the codebase to ensure:
 
----
+- Single responsibility for each component
+- Open/closed architecture for extensibility
+- Liskov substitution compatibility
+- Interface segregation for clean contracts
+- Dependency injection for loose coupling
 
-## 🔜 Itens Desejáveis
+The architecture enables:
 
-* Logs estruturados (ex: Winston, Pino)
-* Tratamento de exceções com middlewares
-* Documentação da API (Swagger, Postman, etc.)
-* Linter (ESLint, Prettier)
-* Deploy funcional (Railway, Fly.io, Heroku, Render, etc.)
-* CI/CD com GitHub Actions ou similar
-* Frontend opcional com:
-
-  * Vue.js 3 + TypeScript
-  * ou React + TypeScript
-  * Estilização com TailwindCSS ou equivalente
-
----
-
-## 🚀 Stack Tecnológica Esperada
-
-### Backend:
-
-* Node.js + TypeScript
-* **Express.js** ou **NestJS**
-* TypeORM, MikroORM ou Prisma (a critério do desenvolvedor)
-* PostgreSQL ou SQLite
-* Jest ou Vitest para testes
-
-### Frontend (opcional):
-
-* Vue.js 3 **ou** React 18
-* Axios
-* TailwindCSS (opcional)
-* Testes com Cypress, Vitest ou RTL (opcional)
-
----
-
-## 💡 Diferenciais para o Perfil da Vaga
-
-* Experiência com arquiteturas escaláveis e boas práticas REST
-* Conhecimento em AWS (S3, Lambda, RDS, etc.)
-* Familiaridade com CI/CD pipelines
-* Boa comunicação e escrita em inglês
-* Conforto em trabalhar próximo a equipes de Produto e Design
-
----
-
-## 📋 Entrega
-
-1. Faça um fork deste repositório ou crie um novo projeto em seu GitHub
-2. Crie uma branch com seu nome em snake\_case (ex: `joao_silva_souza`)
-3. Suba seu código com commits organizados
-4. Abra um Pull Request com:
-
-   * Título: `Entrega - joao_silva_souza`
-   * Corpo: nome completo, data da entrega e observações (se necessário)
-
----
-
-## 📢 Considerações Finais
-
-* Se utilizar algum recurso pago (API, infra), cite alternativas gratuitas no README.
-* Demonstrações de atenção a performance, design de software e clareza de código são valorizadas.
-* Se desejar, adicione um arquivo `THOUGHTS.md` com explicações técnicas, suposições e decisões de arquitetura.
-
-Boa sorte! 🚀
-=======
-# currency-converter
-
-Currency Converter
-Teste de commit
->>>>>>> 4dad0e9 (First commit test.)
+- Straightforward onboarding for new developers
+- Isolated modification of components
+- Clear data flow tracking
+- Sustainable long-term maintenance
+>>>>>>> dbab6b2 (Add the project descriptions.)
