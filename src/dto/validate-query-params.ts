@@ -27,14 +27,14 @@ export class ValidateQueryParams {
     }
 
     const fromValueNumber = parseFloat(String(query.fromValue));
+    if (!query.fromValue) {
+      throw new Error('Missing fromValue query parameter');
+    }
     if (isNaN(fromValueNumber)) {
-      throw new Error('The query parameter toCurrency must be a number');
+      throw new Error('The query parameter fromValue must be a number');
     }
     if (fromValueNumber <= 0) {
-      throw new Error('The query parameter toCurrency must be greater than zero');
-    }
-    if (!query.toCurrency) {
-      throw new Error('Missing toCurrency query parameter');
+      throw new Error('The query parameter fromValue must be greater than zero');
     }
     if (!validCurrencies.includes(query.toCurrency)) {
       throw new Error(`The toCurrency property must be one of: ${validCurrencies.join(', ')}`);
