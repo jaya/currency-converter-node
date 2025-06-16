@@ -21,7 +21,8 @@ export class CurrencyConverterService {
         params
       );
 
-      const rate = apiResult?.data.data.USD.value;
+      const currencyKey = Object.keys(apiResult.data.data)[0];
+      const rate = apiResult.data.data[currencyKey].value;
       const timestamp = apiResult?.data?.meta.last_updated_at;
 
       const toValue = fromValue * rate;
