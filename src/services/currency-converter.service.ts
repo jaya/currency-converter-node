@@ -6,7 +6,7 @@ import { CallApiService } from './call-api.service';
 
 export class CurrencyConverterService {
   constructor(private callApiService: CallApiService) { }
-  async convertCurrencyAndGetTaxes(validatedParams: ValidatedConvertCurrency) {
+  async convertCurrencyAndGetTaxes(validatedParams: ValidatedConvertCurrency): Promise<ConversionResultInterface> {
     const { fromCurrency, toCurrency, fromValue } = validatedParams;
     const params: ParamsApiCallInteface = {
       apikey: process.env.API_KEY ?? '',
