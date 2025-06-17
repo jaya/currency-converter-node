@@ -3,8 +3,10 @@ import cors from "cors";
 import morgan from "morgan";
 import router from "./routes";
 import { errorHandler } from "./middlewares/error.middleware";
+import setupSwagger from "./config/swagger/swagger";
 
 const app = express();
+setupSwagger(app)
 
 // Middlewares
 app.use(cors());
