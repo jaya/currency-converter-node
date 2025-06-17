@@ -14,7 +14,7 @@ export class CurrencyConverterUserService {
       if (!queryUserResult) {
         throw new Error("USER_NOT_FOUND_WITH_ID " + id);
       }
-      logger.info(`RESULT_USER_FIND: ${queryUserResult}`)
+      logger.info(`RESULT_USER_FIND: ${JSON.stringify(queryUserResult)}`)
     } catch (error: any) {
       logger.error(`ERROR_RESULT_USER_FIND: ${error?.message}`)
       throw new Error(error?.message);
