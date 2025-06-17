@@ -25,14 +25,12 @@ jobs:
       - script: npm run test
         displayName: "Run the test pipeline"
 
-      # Login
       - task: Docker@2
         displayName: Docker login
         inputs:
           command: login
           containerRegistry: $(containerRegistry)
 
-      # Build
       - task: Docker@2
         displayName: Docker build
         inputs:
@@ -42,7 +40,14 @@ jobs:
           arguments: --cache-from $(containerRegistry).azurecr.io/$(repository):latest --build-arg BUILD_NUMBER=$(Build.BuildNumber) --build-arg BUILDKIT_INLINE_CACHE=1
           tags: $(tags)
 
-      # Logout
+      - task: Docker@2
+        displayName: Docker push
+        inputs:
+          command: push
+          containerRegistry: $(containerRegistry)
+          repository: $(repository)
+          tags: $(tags)
+
       - task: Docker@2
         displayName: Docker logout
         inputs:
