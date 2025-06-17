@@ -69,4 +69,16 @@ The architecture enables:
 - Isolated modification of components
 - Clear data flow tracking
 - Sustainable long-term maintenance
->>>>>>> dbab6b2 (Add the project descriptions.)
+
+## Continuos Integration
+
+This project has the azure-pipelines.yml file. If you push this project to the Azure Devops repository,
+a pipeline will trigger. This pipeline will run all the tests and after this, it'll create a imagem and push it to a Azure Container Registry.
+
+## Swagger documentation
+
+This project has a swagger. To acess the swagger documentation, access the link:`
+
+`http://localhost:4000/docs`
+
+The 4000 port will depend of value you put in PORT variable in .env file.
