@@ -4,6 +4,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserController } from './user/user.controller';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { TransactionsController } from './transactions/transactions.controller';
+import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
   imports: [
@@ -25,7 +27,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       }),
     }),
     UserModule,
+    TransactionsModule,
   ],
-  controllers: [ConvertController, UserController],
+  controllers: [ConvertController, UserController, TransactionsController],
 })
 export class AppModule {}
