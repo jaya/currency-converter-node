@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import { Test, TestingModule } from '@nestjs/testing';
 import { TransactionsController } from './transactions.controller';
 import { TransactionsService } from './transactions.service';
-import { Transaction } from './transactions.entity';
-import { CreateTransactionDto } from './transactions.dto';
+import { CreateTransactionDto, ResponseTransactionDto } from './transactions.dto';
 import { Currencies } from '../convert/convert.dto';
 
 jest.mock('@everapi/currencyapi-js', () => {
@@ -18,7 +18,16 @@ jest.mock('@everapi/currencyapi-js', () => {
 });
 
 describe('TransactionsController', () => {
+  beforeAll(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
+  });
+
   let controller: TransactionsController;
+  let service: TransactionsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -27,13 +36,15 @@ describe('TransactionsController', () => {
         {
           provide: TransactionsService,
           useValue: {
-            create: jest.fn().mockResolvedValue(new Transaction()),
+            create: jest.fn(),
+            getUserTransactions: jest.fn(),
           },
         },
       ],
     }).compile();
 
     controller = module.get<TransactionsController>(TransactionsController);
+    service = module.get<TransactionsService>(TransactionsService);
   });
 
   it('should be defined', () => {
@@ -43,26 +54,38 @@ describe('TransactionsController', () => {
   it('should create a transaction', async () => {
     const transactionDto: CreateTransactionDto = {
       userId: 1,
-      fromCurrency: 'USD' as Currencies,
-      toCurrency: 'EUR' as Currencies,
+      fromCurrency: Currencies.USD,
+      toCurrency: Currencies.EUR,
       fromValue: 92,
     };
+
+    const mockResponse: ResponseTransactionDto = {
+      transactionId: 1,
+      userId: 1,
+      fromCurrency: Currencies.USD,
+      toCurrency: Currencies.EUR,
+      fromValue: 92,
+      toValue: 85,
+      rate: 0.92,
+      timestamp: new Date(),
+    };
+
+    jest.spyOn(service, 'create').mockResolvedValue(mockResponse);
+
     const result = await controller.createTransaction(transactionDto);
-    expect(result).toBeInstanceOf(Transaction);
+    expect(result).toEqual(mockResponse);
+    expect(service.create).toHaveBeenCalledWith(transactionDto);
   });
 
   it('should handle errors when creating a transaction', async () => {
-    const transactionDto = {
-      id: 1,
+    const transactionDto: CreateTransactionDto = {
       userId: 1,
-      fromCurrency: 'USD' as Currencies,
-      toCurrency: 'EUR' as Currencies,
-      fromValue: 100,
-      timestamp: new Date(),
+      fromCurrency: Currencies.USD,
+      toCurrency: Currencies.EUR,
+      fromValue: 92,
     };
-    jest
-      .spyOn(controller, 'createTransaction')
-      .mockRejectedValue(new Error('Failed to create transaction'));
+
+    jest.spyOn(service, 'create').mockRejectedValue(new Error('Failed to create transaction'));
 
     await expect(controller.createTransaction(transactionDto)).rejects.toThrow(
       'Failed to create transaction',
@@ -72,23 +95,20 @@ describe('TransactionsController', () => {
   describe('getUserTransactions', () => {
     it('should return user transactions', async () => {
       const userId = 1;
-      const transactions = [new Transaction()];
-      jest.spyOn(controller, 'getUserTransactions').mockResolvedValue(transactions);
+      const transactions = [{ transactionId: 1 } as any];
+
+      jest.spyOn(service, 'getUserTransactions').mockResolvedValue(transactions);
 
       const result = await controller.getUserTransactions(userId);
       expect(result).toEqual(transactions);
-    });
-
-    it('should throw an error if userId is not provided', async () => {
-      await expect(controller.getUserTransactions(undefined as any)).rejects.toThrow(
-        'User ID is required',
-      );
+      expect(service.getUserTransactions).toHaveBeenCalledWith(userId);
     });
 
     it('should handle errors when fetching user transactions', async () => {
       const userId = 1;
+
       jest
-        .spyOn(controller, 'getUserTransactions')
+        .spyOn(service, 'getUserTransactions')
         .mockRejectedValue(new Error('Failed to fetch user transactions'));
 
       await expect(controller.getUserTransactions(userId)).rejects.toThrow(

@@ -8,6 +8,14 @@ const mockUserService = {
 };
 
 describe('UserController', () => {
+  beforeAll(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
+  });
+
   let controller: UserController;
 
   beforeEach(async () => {
@@ -24,17 +32,23 @@ describe('UserController', () => {
     controller = module.get<UserController>(UserController);
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
 
   it('should create a user', async () => {
     const user = new User();
+    user.id = 1;
+
     mockUserService.create.mockResolvedValue(user);
 
     const result = await controller.createUser();
     expect(result).toEqual(user);
-    expect(mockUserService.create).toHaveBeenCalledWith(expect.any(Object));
+    expect(mockUserService.create).toHaveBeenCalledWith(expect.any(User));
   });
 
   it('should handle errors when creating a user', async () => {

@@ -9,7 +9,7 @@ export class ConvertService {
 
   async convert(convertDto: ConvertDto): Promise<ConvertServiceResponse> {
     const { fromCurrency, toCurrency, fromValue } = convertDto;
-    if (!fromCurrency || !toCurrency || !fromValue) {
+    if (!fromCurrency || !toCurrency || !fromValue || fromValue <= 0) {
       throw new HttpException('Invalid conversion parameters', HttpStatus.BAD_REQUEST);
     }
 
@@ -25,11 +25,11 @@ export class ConvertService {
         currencies: toCurrency,
       });
 
-      const toCurrencyValue: number = response.data[toCurrency].value;
+      const rate: number = response.data[toCurrency].value;
 
       return {
-        toValue: toCurrencyValue * fromValue,
-        rate: toCurrencyValue,
+        toValue: rate * fromValue,
+        rate,
       };
     } catch (error) {
       console.error('Currency conversion error:', error);

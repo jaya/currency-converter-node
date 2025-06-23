@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, ParseIntPipe, Post, Query } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto, ResponseTransactionDto } from './transactions.dto';
 import { User } from 'src/user/user.entity';
@@ -19,11 +19,7 @@ export class TransactionsController {
 
   @Get()
   @ApiQuery({ name: 'userId', required: true })
-  async getUserTransactions(@Query('userId') userId: User['id']) {
-    if (!userId) {
-      throw new Error('User ID is required');
-    }
-
+  async getUserTransactions(@Query('userId', ParseIntPipe) userId: User['id']) {
     return await this.transactionService.getUserTransactions(userId);
   }
 }

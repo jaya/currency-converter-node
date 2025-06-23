@@ -16,13 +16,21 @@ jest.mock('@everapi/currencyapi-js', () => {
 });
 
 describe('ConvertService', () => {
-  let controller: ConvertService;
+  beforeAll(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
+  });
+
+  let service: ConvertService;
   let configService: ConfigService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ConvertService],
       providers: [
+        ConvertService,
         {
           provide: ConfigService,
           useValue: {
@@ -32,16 +40,16 @@ describe('ConvertService', () => {
       ],
     }).compile();
 
-    controller = module.get<ConvertService>(ConvertService);
+    service = module.get<ConvertService>(ConvertService);
     configService = module.get<ConfigService>(ConfigService);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(service).toBeDefined();
   });
 
   it('converts correctly from USD to EUR', async () => {
-    const response = await controller.convert({
+    const response = await service.convert({
       fromCurrency: Currencies.USD,
       toCurrency: Currencies.EUR,
       fromValue: 1000,
@@ -52,10 +60,30 @@ describe('ConvertService', () => {
 
   it('should throw an error for invalid conversion parameters', async () => {
     await expect(
-      controller.convert({
+      service.convert({
         fromCurrency: Currencies.USD,
         toCurrency: undefined as any,
         fromValue: 1000,
+      }),
+    ).rejects.toThrow('Invalid conversion parameters');
+  });
+
+  it('should throw an error if fromValue is equal to zero', async () => {
+    await expect(
+      service.convert({
+        fromCurrency: Currencies.USD,
+        toCurrency: Currencies.EUR,
+        fromValue: 0,
+      }),
+    ).rejects.toThrow('Invalid conversion parameters');
+  });
+
+  it('should throw an error if fromValue is less than zero', async () => {
+    await expect(
+      service.convert({
+        fromCurrency: Currencies.USD,
+        toCurrency: Currencies.EUR,
+        fromValue: -1,
       }),
     ).rejects.toThrow('Invalid conversion parameters');
   });
@@ -64,7 +92,7 @@ describe('ConvertService', () => {
     jest.spyOn(configService, 'get').mockReturnValue(undefined);
 
     await expect(
-      controller.convert({
+      service.convert({
         fromCurrency: Currencies.USD,
         toCurrency: Currencies.EUR,
         fromValue: 1000,
@@ -79,7 +107,7 @@ describe('ConvertService', () => {
     }));
 
     await expect(
-      controller.convert({
+      service.convert({
         fromCurrency: Currencies.USD,
         toCurrency: Currencies.EUR,
         fromValue: 1000,

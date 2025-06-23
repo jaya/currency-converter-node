@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Transaction } from './transactions.entity';
@@ -35,7 +35,7 @@ export class TransactionsService {
 
       return {
         transactionId: response.transactionId,
-        userId: userId,
+        userId: response.user.id,
         fromCurrency: response.fromCurrency,
         toCurrency: response.toCurrency,
         fromValue: response.fromValue,
@@ -45,20 +45,30 @@ export class TransactionsService {
       };
     } catch (error: unknown) {
       console.error('Error creating transaction:', error);
-      throw new Error('Failed to create Transaction');
+      throw new InternalServerErrorException('Failed to create Transaction');
     }
   }
 
-  async getUserTransactions(userId: User['id']): Promise<Transaction[]> {
+  async getUserTransactions(userId: User['id']): Promise<ResponseTransactionDto[]> {
     try {
-      console.log('Fetching transactions for user ID:', userId);
-      return await this.transactionsRepository.find({
+      const transactions = await this.transactionsRepository.find({
         where: { user: { id: userId } },
         order: { timestamp: 'DESC' },
       });
+
+      return transactions.map((transaction) => ({
+        transactionId: transaction.transactionId,
+        userId: transaction.user.id,
+        fromCurrency: transaction.fromCurrency,
+        toCurrency: transaction.toCurrency,
+        fromValue: transaction.fromValue,
+        toValue: transaction.toValue,
+        rate: transaction.rate,
+        timestamp: transaction.timestamp,
+      }));
     } catch (error: unknown) {
       console.error('Error fetching user transactions:', error);
-      throw new Error('Failed to fetch user transactions');
+      throw new InternalServerErrorException('Failed to fetch user transactions');
     }
   }
 }
