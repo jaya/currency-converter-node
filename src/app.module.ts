@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ConvertController } from './convert/convert.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserController } from './user/user.controller';
 import { UserModule } from './user/user.module';
@@ -29,6 +28,6 @@ import { TransactionsModule } from './transactions/transactions.module';
     UserModule,
     TransactionsModule,
   ],
-  controllers: [ConvertController, UserController, TransactionsController],
+  controllers: [UserController, TransactionsController],
 })
 export class AppModule {}

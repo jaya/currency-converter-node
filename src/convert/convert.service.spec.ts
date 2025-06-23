@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { ConvertService } from './convert.service';
+import { Currencies } from './convert.dto';
 
 jest.mock('@everapi/currencyapi-js', () => {
   return {
@@ -41,8 +42,8 @@ describe('ConvertService', () => {
 
   it('converts correctly from USD to EUR', async () => {
     const response = await controller.convert({
-      fromCurrency: 'USD',
-      toCurrency: 'EUR',
+      fromCurrency: Currencies.USD,
+      toCurrency: Currencies.EUR,
       fromValue: 1000,
     });
 
@@ -52,7 +53,7 @@ describe('ConvertService', () => {
   it('should throw an error for invalid conversion parameters', async () => {
     await expect(
       controller.convert({
-        fromCurrency: 'USD',
+        fromCurrency: Currencies.USD,
         toCurrency: undefined as any,
         fromValue: 1000,
       }),
@@ -64,8 +65,8 @@ describe('ConvertService', () => {
 
     await expect(
       controller.convert({
-        fromCurrency: 'USD',
-        toCurrency: 'EUR',
+        fromCurrency: Currencies.USD,
+        toCurrency: Currencies.EUR,
         fromValue: 1000,
       }),
     ).rejects.toThrow('Missing CURRENCY_API_KEY');
@@ -79,8 +80,8 @@ describe('ConvertService', () => {
 
     await expect(
       controller.convert({
-        fromCurrency: 'USD',
-        toCurrency: 'EUR',
+        fromCurrency: Currencies.USD,
+        toCurrency: Currencies.EUR,
         fromValue: 1000,
       }),
     ).rejects.toThrow('Currency conversion failed');

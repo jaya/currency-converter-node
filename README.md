@@ -1,6 +1,8 @@
 ## Currency Converter
 
-This repository was created using [Nest](https://github.com/nestjs/nest).
+This is an application to create users and conversion transactions. It uses NestJs, TypeORM and PostgreSQL.
+
+Check API Swagger documentation `/api`
 
 ## Project setup
 
