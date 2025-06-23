@@ -152,6 +152,7 @@ describe('TransactionsService', () => {
 
       expect(transactionsRepository.find).toHaveBeenCalledWith({
         where: { user: { id: userId } },
+        relations: ['user'],
         order: { timestamp: 'DESC' },
       });
 
@@ -175,6 +176,19 @@ describe('TransactionsService', () => {
       await expect(service.getUserTransactions(1)).rejects.toThrow(
         'Failed to fetch user transactions',
       );
+    });
+
+    it('should throw an error if convertService fails', async () => {
+      mockConvertService.convert.mockRejectedValue(new Error('API error'));
+
+      await expect(
+        service.create({
+          userId: 1,
+          fromCurrency: Currencies.USD,
+          toCurrency: Currencies.EUR,
+          fromValue: 100,
+        }),
+      ).rejects.toThrow('Failed to create Transaction');
     });
   });
 });

@@ -53,6 +53,7 @@ export class TransactionsService {
     try {
       const transactions = await this.transactionsRepository.find({
         where: { user: { id: userId } },
+        relations: ['user'],
         order: { timestamp: 'DESC' },
       });
 
