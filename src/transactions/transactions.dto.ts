@@ -7,7 +7,5 @@ export type TransactionDto = {
   fromCurrency: Currencies;
   toCurrency: Currencies;
   fromValue: number;
-  toValue: number;
-  rate: number;
   timestamp: Date;
 };

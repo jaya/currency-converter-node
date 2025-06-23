@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConvertController } from './convert.controller';
 import { ConfigService } from '@nestjs/config';
+import { ConvertService } from './convert.service';
 
 jest.mock('@everapi/currencyapi-js', () => {
   return {
@@ -14,13 +14,13 @@ jest.mock('@everapi/currencyapi-js', () => {
   };
 });
 
-describe('ConvertController', () => {
-  let controller: ConvertController;
+describe('ConvertService', () => {
+  let controller: ConvertService;
   let configService: ConfigService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ConvertController],
+      controllers: [ConvertService],
       providers: [
         {
           provide: ConfigService,
@@ -31,7 +31,7 @@ describe('ConvertController', () => {
       ],
     }).compile();
 
-    controller = module.get<ConvertController>(ConvertController);
+    controller = module.get<ConvertService>(ConvertService);
     configService = module.get<ConfigService>(ConfigService);
   });
 
@@ -41,30 +41,34 @@ describe('ConvertController', () => {
 
   it('converts correctly from USD to EUR', async () => {
     const response = await controller.convert({
-      baseCurrency: 'USD',
-      endCurrency: 'EUR',
-      baseValue: 1000,
+      fromCurrency: 'USD',
+      toCurrency: 'EUR',
+      fromValue: 1000,
     });
 
-    expect(response).toBe(920);
+    expect(response).toEqual({ rate: 0.92, toValue: 920 });
   });
 
   it('should throw an error for invalid conversion parameters', async () => {
-    await expect(controller.convert({
-      baseCurrency: 'USD',
-      endCurrency: undefined as any,
-      baseValue: 1000,
-    })).rejects.toThrow('Invalid conversion parameters');
+    await expect(
+      controller.convert({
+        fromCurrency: 'USD',
+        toCurrency: undefined as any,
+        fromValue: 1000,
+      }),
+    ).rejects.toThrow('Invalid conversion parameters');
   });
 
   it('should throw an error if CURRENCY_API_KEY is missing', async () => {
     jest.spyOn(configService, 'get').mockReturnValue(undefined);
 
-    await expect(controller.convert({
-      baseCurrency: 'USD',
-      endCurrency: 'EUR',
-      baseValue: 1000,
-    })).rejects.toThrow('Missing CURRENCY_API_KEY');
+    await expect(
+      controller.convert({
+        fromCurrency: 'USD',
+        toCurrency: 'EUR',
+        fromValue: 1000,
+      }),
+    ).rejects.toThrow('Missing CURRENCY_API_KEY');
   });
 
   it('should throw an error if currency conversion fails', async () => {
@@ -73,10 +77,12 @@ describe('ConvertController', () => {
       latest: jest.fn().mockRejectedValue(new Error('API error')),
     }));
 
-    await expect(controller.convert({
-      baseCurrency: 'USD',
-      endCurrency: 'EUR',
-      baseValue: 1000,
-    })).rejects.toThrow('Currency conversion failed');
+    await expect(
+      controller.convert({
+        fromCurrency: 'USD',
+        toCurrency: 'EUR',
+        fromValue: 1000,
+      }),
+    ).rejects.toThrow('Currency conversion failed');
   });
 });

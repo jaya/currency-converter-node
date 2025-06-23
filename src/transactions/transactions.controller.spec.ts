@@ -5,6 +5,18 @@ import { Transaction } from './transactions.entity';
 import { TransactionDto } from './transactions.dto';
 import { Currencies } from '../convert/convert.dto';
 
+jest.mock('@everapi/currencyapi-js', () => {
+  return {
+    default: jest.fn().mockImplementation(() => ({
+      latest: jest.fn().mockResolvedValue({
+        data: {
+          EUR: { value: 0.92 },
+        },
+      }),
+    })),
+  };
+});
+
 describe('TransactionsController', () => {
   let controller: TransactionsController;
 
@@ -34,9 +46,7 @@ describe('TransactionsController', () => {
       userId: 1,
       fromCurrency: 'USD' as Currencies,
       toCurrency: 'EUR' as Currencies,
-      toValue: 100,
       fromValue: 92,
-      rate: 0.92,
       timestamp: new Date(),
     };
     const result = await controller.createTransaction(transactionDto);
@@ -50,8 +60,6 @@ describe('TransactionsController', () => {
       fromCurrency: 'USD' as Currencies,
       toCurrency: 'EUR' as Currencies,
       fromValue: 100,
-      toValue: 92,
-      rate: 0.92,
       timestamp: new Date(),
     };
     jest
