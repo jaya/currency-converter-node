@@ -42,7 +42,7 @@ $ npm run test
 
 ## Architectural Decisions
 
-- User controller service will be as minimal as possible as they should only be associated with transactions, with no further data, this can be easily expanded.
+- User service will be as minimal as possible as they should only be associated with transactions, with no further data, this can be easily expanded.
 - User is saved to user table in the DB
 - Convert is a service that calls the currencyapi for rates and returns the toValue based on rate as well - this will be used by the transactions endpoint
 - Transactions controller will create transactions associated to users by id and return all transactions for that user by establishing a relation with the user table
